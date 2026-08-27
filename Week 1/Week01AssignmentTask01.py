@@ -1,0 +1,1 @@
+print('I want to use coding so I can search large databases of financial transactions in pursuit of identifying and telling data-driven stories about sustainable finance')
