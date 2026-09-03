@@ -8,6 +8,7 @@ class PreySample:
         self.tissue_description = tissue_description
         self.sample_date_utc = sample_date_utc
         
+    @property
     def get_common_name(self):
         return self.full_species_name.split(' (',) [0])
         
