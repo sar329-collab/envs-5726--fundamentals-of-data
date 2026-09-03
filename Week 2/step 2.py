@@ -1,6 +1,10 @@
 import sys
-sys.path.insert(_index 1, _object: /Users/shaunroberts/PycharmProjects/envs-5726--fundamentals-of-data/Week\ 2/organizations.py)
+from operator import index
+
+sys.path.insert(index(1),object r'C:\Users/shaunroberts/PycharmProjects/envs-5726--fundamentals-of-data/Week\ 2/organizations.py')
+
 import  organizations
+
 american_water=organizations.company(name='American Water', market_cap=28940000000, share_value=148.4)
 american_water_shares=american_water.get_number_of_share()
 print(american_water_shares)
