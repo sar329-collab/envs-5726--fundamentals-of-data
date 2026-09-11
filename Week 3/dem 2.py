@@ -35,8 +35,12 @@ print(is_gp_religious_or_academic('almorada chruch'))
 print(is_gp_religious_or_academic('health insulation building'))
 
 def get_sanitation_priority(ratio, disabled, pop, gp):
-
-
+    if is_min_ratio_toilets_to_people_met == False and is_population_disabled >= 0.10 and is_gp_religious_or_academic == True:
+        Print("High Priority")
+    elif is_min_ratio_toilets_to_people_met == False or is_population_disabled >= 0.10 or is_gp_religious_or_academic == True:
+        Print("Medium Priority")
+    else:
+        print("Low Priority")
 print(get_sanitation_priority(ratio='1t/49p', disabled=2, pop=392, gp='Faculty - Student Dwelling'))
 print(get_sanitation_priority(ratio='1t/29p', disabled=0, pop=178, gp='Mohamed Ali Abbas Secondary School for Girls'))
 print(get_sanitation_priority(ratio='1t/17p', disabled=0, pop=52, gp='Alsalem Old Mosque'))
