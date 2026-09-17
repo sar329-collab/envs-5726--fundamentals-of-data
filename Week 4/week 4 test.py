@@ -1,8 +1,3 @@
-from    pathlib import Path
-folder_path = Path(r'/Users/shaunroberts/Desktop/ENVS\ 5726/SEC_EDGAR_10K')
-for file_path in folder_path.glob('*'):
-    print(file_path)
-
 file_headers = ['Company Name', 'Year', 'Count Sustainability','Count AI']
 file_table = []
 for file_path in folder_path.glob('*'):
@@ -13,5 +8,3 @@ for file_path in folder_path.glob('*'):
 print(file_headers)
 for row in file_table:
     print(row)
-
-
