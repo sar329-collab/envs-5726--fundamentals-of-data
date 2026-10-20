@@ -1,45 +1,73 @@
+import time
 import urllib
 import csv
 from pathlib import Path
 import requests
+from pprint import pprint
 
 csv_path = Path(r'/Users/shaunroberts/Desktop/ENVS 5726/week 7 /USEIA_Petroleum_Refineries_By_Nearest_Major_City.csv')
-US_Petro_Refineries_headers = ['Latitude','Longitude']
-
 Flood_Hazard_Zones_URL = 'https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query'
-Flood_Hazard_Zones = requests.get(url=Flood_Hazard_Zones_URL).json()
 
-Flood_Hazard_Zones_headers = ['FEMA Hazard Zone']
 US_Petro_Refineries_table = []
+with open(csv_path, 'r', newline='', encoding='cp1252') as file:
+    reader = csv.reader(file)
+    headers = next(reader)
+    for row in reader:
+        US_Petro_Refineries_table.append(row)
+headers.append('FEMA Hazard Zone')
 
-with open(csv_path, 'r', newline='', encoding='utf-8') as file:
-    reader = csv.DictReader(file)
-    reader([US_Petro_Refineries_headers] + US_Petro_Refineries_table)
-    rows = list(reader)
-
-print(Flood_Hazard_Zones_URL)
-
+count = 0
 for row in US_Petro_Refineries_table:
-    if  'Latitute' or 'Longitude':
-        Query = {
-            'geometry': {Latitutde} and {Longitude},
-            'insR': '4326',
-            'geometryType': 'esriGeometryPoint',
-            'spatialRel' : 'esriSpatialRelIntersects',
-            'outFields': 'ZONE_SUBTY',
-            'returnGeometry': 'false',
-            'f' : 'pjson'
-         }
-        zone
-    else:
-        zone= None
-    if zone is None or == '':
-       zone = 'No Data'
+    Latitude = row[headers.index('Latitude')]
+    Longitude = row[headers.index('Longitude')]
+    zone = 'No Data'
+    count = count + 1
+    print(f'working on {count}')
 
-US_Petro_Refineries_table.append(row)
+    geometry = f'{Longitude},{Latitude}'
+    Query = {
+        'geometry': geometry,
+        'inSR': '4326',
+        'geometryType': 'esriGeometryPoint',
+        'spatialRel': 'esriSpatialRelIntersects',
+        'outFields': 'ZONE_SUBTY',
+        'returnGeometry': 'false',
+        'f': 'pjson'
+    }
 
-encoded_query = urllib.parse.urlencode(query)
-Flood_Hazard_Zones_URL = Flood_Hazard_Zones_URL + '?' + encoded_query
+    encoded_query = urllib.parse.urlencode(Query)
+    Row_URL = Flood_Hazard_Zones_URL + '?' + encoded_query
 
+    try:
+        Response = requests.get(url = Row_URL)
+        Flood_Hazard_Zones_data = Response.json()
+        features = Flood_Hazard_Zones_data.get('features', [])
 
+        if features and features[0].get('attributes') is not None:
+                zone = features[0]['attributes'].get('ZONE_SUBTY')
+        else:
+            zone
+    except requests.exceptions.ConnectionError:
+        time.sleep(5)
 
+        try:
+            Response = requests.get(url = Row_URL)
+            Flood_Hazard_Zones_data = Response.json()
+            features = Flood_Hazard_Zones_data.get('features', [])
+
+            if features and features[0].get('attributes') is not None:
+                zone = features[0]['attributes'].get('ZONE_SUBTY')
+            else:
+                zone
+        except requests.exceptions.ConnectionError:
+            zone = 'Connection Failed'
+    print(Row_URL)
+    row.append(zone)
+    time.sleep(10)
+
+export_csv_path = (Path(r'/Users/shaunroberts/Desktop/ENVS 5726/week 7 /Petro_Hazard_Zones.csv'))
+with open(export_csv_path, 'w', newline='', encoding='cp1252') as file:
+    writer = csv.writer(file)
+    writer.writerows([headers]+US_Petro_Refineries_table)
+print(Row_URL)
+print('My script finished')
