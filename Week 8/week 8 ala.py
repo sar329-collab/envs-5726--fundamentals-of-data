@@ -2,6 +2,7 @@
 import csv
 from collections import namedtuple
 from pathlib import Path
+from datalib_week_ala import convert_yesno_to_binary
 
 csv_path= '/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey.csv'
 survey_record_table= []
