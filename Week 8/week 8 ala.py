@@ -1,15 +1,26 @@
-from typing import List, Any
+#task 1 - converting list into named tuples
+import csv
 from collections import namedtuple
+from pathlib import Path
 
-Rohingya_Wash_Survey_Headers: List[str] = [#is there a short cut to do all the ones that start with G?]
-Rohingya_Wash_Survey: Type[tuple] = namedtuple(typename='Rohingya_Wash_Survey',field_names=Rohingya_Wash_Survey_Headers)
-Rohingya_Wash_Survey_Table: List[tuple] = [
-    #something!
-]
+csv_path= '/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey.csv'
+survey_record_table= []
 
-import sys
-sys.path.insert(1, r'/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey.csv')
+with open(csv_path, newline='', encoding='cp1252') as csvfile:
+    reader = csv.reader(csvfile)
+    headers = next(reader)
 
-from datalib import filter_equals
+    g_headers= [header for header in headers if header.startswith('G')]
 
-filter_equals(table=Rohingya_Wash_Survey_Table, column_name='Rohingya_Wash_Survey', value=#starts with G)
+    SurveyRecord = namedtuple('SurveyRecord', field_names=g_headers)
+
+    for row in reader:
+        g_row_values = [row[headers.index(column)] for column in g_headers]
+
+        Survey_Record = SurveyRecord(*g_row_values)
+        survey_record_table.append(Survey_Record)
+print(survey_record_table[0])
+
+#task 2 - Execution Script Binary Function
+binary_survey_table = convert_yesno_to_binary(table=survey_record_table)
+print(binary_survey_table[0])
