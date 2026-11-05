@@ -40,11 +40,46 @@ final_converted_table = convert_values_to_numeric(binary_survey_table)
 
 print(final_converted_table[0])
 
-#task 4 and 5 - factor analysis
-import pandas as pdp
+#task 4
+import pandas as pd
+from factor_analyzer import FactorAnalyzer
+
+data = pd.DataFrame.from_records(data=final_converted_table, columns=final_converted_table[0]._fields)
+
+fa = FactorAnalyzer(rotation="varimax")
+#fa.fit(data)
+
+#task 5
+corr = data.corr()
+print(corr)
+
+constant_columns = data.columns[data.nunique() == 1]
+print(constant_columns.tolist())
+
+data_clean = data.drop(columns=constant_columns)
+print(data_clean)
+
+#task 6
+# create factor analysis object & factor analysis
 from factor_analyzer import FactorAnalyzer
 fa = FactorAnalyzer(rotation="varimax")
 fa.fit(data)
+
+#perform factor analysis with determined number of factors
+number_of_factors = 5
+fa = FactorAnalyzer(n_factors=number_of_factors, rotation="varimax")
+fa.fit(data)
+
+factor_names = [f'Factor{i+1}' for i in range(number_of_factors)]
+
+loadings_df = pd.DataFrame(fa.loadings_, columns=factor_names, index=[data.columns])
+
+#get variance of each factor
+index_names = ['sum of squared loadings', 'proportional variance','cumulative variance']
+variance_df = pd.DataFrame(fa.get_factor_variance(), columns=factor_names, index=index_names)
+
+loadings_df.to_csv(r'/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey.csv')
+variance_df.to_csv(r'/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey.csv')
 
 
 
