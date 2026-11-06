@@ -4,7 +4,7 @@ from collections import namedtuple
 from operator import index
 from pathlib import Path
 
-csv_path= '/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey.csv'
+csv_path= '/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey_2.csv'
 survey_record_table= []
 
 with open(csv_path, newline='', encoding='cp1252') as csvfile:
@@ -59,27 +59,24 @@ print(constant_columns.tolist())
 data_clean = data.drop(columns=constant_columns)
 print(data_clean)
 
-#task 6
-# create factor analysis object & factor analysis
+#TASK 6 - create factor analysis object & factor analysis
 from factor_analyzer import FactorAnalyzer
-fa = FactorAnalyzer(rotation="varimax")
-fa.fit(data)
 
 #perform factor analysis with determined number of factors
 number_of_factors = 5
 fa = FactorAnalyzer(n_factors=number_of_factors, rotation="varimax")
-fa.fit(data)
+fa.fit(data_clean)
 
 factor_names = [f'Factor{i+1}' for i in range(number_of_factors)]
 
-loadings_df = pd.DataFrame(fa.loadings_, columns=factor_names, index=[data.columns])
+loadings_df = pd.DataFrame(fa.loadings_, columns=factor_names, index=data_clean.columns)
 
 #get variance of each factor
 index_names = ['sum of squared loadings', 'proportional variance','cumulative variance']
 variance_df = pd.DataFrame(fa.get_factor_variance(), columns=factor_names, index=index_names)
 
-loadings_df.to_csv(r'/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey.csv')
-variance_df.to_csv(r'/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Survey.csv')
+loadings_df.to_csv(r'/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Loading.csv')
+variance_df.to_csv(r'/Users/shaunroberts/Desktop/ENVS 5726/week 8/IOM_Rohingya_WASH_Variance.csv')
 
 
 
