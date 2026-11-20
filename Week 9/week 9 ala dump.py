@@ -51,3 +51,11 @@ plt.xlabel('Life Expectancy (y)')
 plt.ylabel('Survival Probability (%)')
 plt.title('Pipe Material Survival CDF')
 plt.show
+
+
+#task 2
+class water_mains(NamedTuple):
+    MainType: str
+    Diameter: int
+    InstallDate: datetime.datetime
+    Material: str
